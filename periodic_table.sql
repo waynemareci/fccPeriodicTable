@@ -117,15 +117,13 @@ ALTER TABLE ONLY public.types ALTER COLUMN type_id SET DEFAULT nextval('public.t
 --
 
 INSERT INTO public.elements VALUES (1, 'H', 'Hydrogen');
-INSERT INTO public.elements VALUES (2, 'he', 'Helium');
-INSERT INTO public.elements VALUES (3, 'li', 'Lithium');
+INSERT INTO public.elements VALUES (2, 'He', 'Helium');
+INSERT INTO public.elements VALUES (3, 'Li', 'Lithium');
 INSERT INTO public.elements VALUES (4, 'Be', 'Beryllium');
 INSERT INTO public.elements VALUES (5, 'B', 'Boron');
 INSERT INTO public.elements VALUES (6, 'C', 'Carbon');
 INSERT INTO public.elements VALUES (7, 'N', 'Nitrogen');
 INSERT INTO public.elements VALUES (8, 'O', 'Oxygen');
-INSERT INTO public.elements VALUES (1000, 'mT', 'moTanium');
-
 
 --
 -- Data for Name: properties; Type: TABLE DATA; Schema: public; Owner: freecodecamp
@@ -139,8 +137,6 @@ INSERT INTO public.properties VALUES (5, 'metalloid', 10.810000, 2075, 4000);
 INSERT INTO public.properties VALUES (6, 'nonmetal', 12.011000, 3550, 4027);
 INSERT INTO public.properties VALUES (7, 'nonmetal', 14.007000, -210.1, -195.8);
 INSERT INTO public.properties VALUES (8, 'nonmetal', 15.999000, -218, -183);
-INSERT INTO public.properties VALUES (1000, 'metalloid', 1.000000, 10, 100);
-
 
 --
 -- Data for Name: types; Type: TABLE DATA; Schema: public; Owner: freecodecamp
