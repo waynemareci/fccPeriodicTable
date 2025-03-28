@@ -5,26 +5,25 @@ unset SYMBOL
 unset NAME
 
 PROCESS_INPUT(){
-  echo "in process_input(); processing $1"
   if [[ ! -z $ATOMIC_NUMBER ]]
   then
-    RESPONSE=$($PSQL "SELECT atomic_number,symbol,name FROM elements WHERE atomic_number=$ATOMIC_NUMBER")
-    echo "Here's the atomic_number response: $RESPONSE"
+    ATOMIC_NUMBER=$($PSQL "SELECT atomic_number FROM elements WHERE atomic_number=$ATOMIC_NUMBER")
   elif [[ ! -z $NAME ]]; then
     NAME_FORMATTED=$(echo $NAME | sed -E 's/^ *| *$//g')
-    RESPONSE=$($PSQL "SELECT atomic_number,symbol,name FROM elements WHERE name='$NAME_FORMATTED'")
-    echo "Here's the name response: $RESPONSE"
+    ATOMIC_NUMBER=$($PSQL "SELECT atomic_number FROM elements WHERE name='$NAME_FORMATTED'")
+    #echo "Here's the name response: $RESPONSE"
   elif [[ ! -z $SYMBOL ]]; then
     SYMBOL_FORMATTED=$(echo $SYMBOL | sed -E 's/^ *| *$//g')
-    RESPONSE=$($PSQL "SELECT atomic_number,symbol,name FROM elements WHERE symbol='$SYMBOL_FORMATTED'")
-    echo "Here's the symbol response: $RESPONSE"
+    ATOMIC_NUMBER=$($PSQL "SELECT atomic_number FROM elements WHERE symbol='$SYMBOL_FORMATTED'")
   else
     echo "serious error - you shouldn't be here"
     exit  
   fi
-  echo "$RESPONSE" | while read ATOMIC_NUMBER BAR SYMBOL BAR NAME
+  PROPERTIES_RESPONSE=$($PSQL "select elements.atomic_number,symbol,name,type,atomic_mass,melting_point_celsius,boiling_point_celsius from elements full join properties on elements.atomic_number=properties.atomic_number full join types on properties.type_id = types.type_id WHERE elements.atomic_number=$ATOMIC_NUMBER")
+  echo "$PROPERTIES_RESPONSE" | while read ATOMIC_NUMBER BAR SYMBOL BAR NAME BAR TYPE BAR MASS BAR MELT BAR BOIL
   do
-    echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL)." 
+    echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a $TYPE, with a mass of $MASS amu. $NAME has a melting point of $MELT celsius and a boiling point of $BOIL celsius." 
+ 
   done
   }
 
