@@ -1,8 +1,11 @@
 #! /bin/bash
 PSQL="psql --username=freecodecamp --dbname=periodic_table --tuples-only -c"
+unset ATOMIC_NUMBER
+unset SYMBOL
+unset NAME
 
 PROCESS_INPUT(){
-  echo "processing $1"
+  echo "in process_input(); processing $1"
 }
 
 if [[ -z $1 ]]
@@ -13,27 +16,31 @@ fi
 re='^[0-9]+$'
 if [[ $1 =~ $re ]]
 then
-  echo "$1 is a number"
   ATOMIC_NUMBER=$($PSQL "SELECT atomic_number FROM elements WHERE atomic_number=$1") 
-
-  if [[ -z ATOMIC_NUMBER ]]
+  if  [[ -z $ATOMIC_NUMBER ]]
   then
-    SYMBOL=$($PSQL "SELECT symbol FROM elements WHERE symbol=$1")
-    if [[ -z SYMBOL ]]
-    then
-     NAME=$($PSQL "SELECT name FROM elements WHERE name=$1")
-     if [[ -z $NAME ]]
-     then
-      echo "I could not find that element in the database."
-      exit 
-     fi
-    fi
+    exit
   else
-    echo "found atomic number $1"
-    PROCESS_INPUT $1
+    PROCESS_INPUT $ATOMIC_NUMBER
     exit
   fi
+else
+    SYMBOL=$($PSQL "SELECT symbol FROM elements WHERE symbol='$1'")
+    if [[ ! -z $SYMBOL ]]
+    then
+
+     PROCESS_INPUT $SYMBOL
+     exit
+    else
+     NAME=$($PSQL "SELECT name FROM elements WHERE name='$1'")
+     if [[ ! -z $NAME ]]
+     then
+      PROCESS_INPUT $NAME
+      exit
+      else
+        echo "I could not find that element in the database."
+        exit
+    fi
+  fi
 fi
-echo "I could not find that element in the database."
-exit
 
